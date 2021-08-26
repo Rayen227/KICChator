@@ -714,8 +714,8 @@
     },
     "component": "",
     "_componentId": "6dbd3ByxSdKzI86out1cPTs",
-    "handler": "changeMotion",
-    "customEventData": "SPEAK"
+    "handler": "button",
+    "customEventData": ""
   },
   {
     "__type__": "cc.Node",
