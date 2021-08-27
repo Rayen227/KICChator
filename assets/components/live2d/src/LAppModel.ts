@@ -690,7 +690,7 @@ export default class Live2dModel extends CubismUserModel {
      */
     public setRandomExpression(): void {
         if (this._expressions.getSize() == 0) {
-            return 
+            return
         }
 
         let no: number = Math.floor(Math.random() * this._expressions.getSize());
@@ -699,7 +699,7 @@ export default class Live2dModel extends CubismUserModel {
             if (i == no) {
                 let name: string = this._expressions._keyValues[i].first;
                 this.setExpression(name);
-                return 
+                return
             }
         }
         return
@@ -787,7 +787,12 @@ export default class Live2dModel extends CubismUserModel {
                         this._state = LoadStep.LoadTexture;
 
                         // 全てのモーションを停止する
-                        this._motionManager.stopAllMotions();
+                        // console.log("!!!!!", this._motionManager);
+
+                        if (this._motionManager) {
+                            this._motionManager.stopAllMotions();
+                        }
+
 
                         this._updating = false;
                         this._initialized = true;

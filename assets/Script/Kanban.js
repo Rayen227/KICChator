@@ -6,42 +6,34 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
     },
 
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
-
-
     ctor() {
-        this.SPEAKMode = [3, 4, 6];
-        this.IDLEMode = [0, 1, 2];
 
-        this.cnt = 0;
+        this.modelName = "Hiyori";
+
+        this.motionMode = {
+            "Hiyori": {
+                "SPEAK": [3, 4, 6],
+                "IDLE": [0, 1, 2],
+                "ERROR": [5, 7]
+            },
+            "Natori": {//待修改
+                "SPEAK": [3, 4, 6],
+                "IDLE": [0, 1, 2],
+                "ERROR": [5, 7]
+            }
+        }
+
+
+        this.cnt = 0; //动作切换次数，保证新动作优先级高于原动作
     },
     start() {
         var self = this;
-        // this.getComponent(Live2dComponent).live2d.loadModel("Hiyori")
-        this.getComponent(Live2dComponent).loopIdelMotion = false;
-        // this.cnt = 0;
-        // cc.find("Canvas/button").on(cc.Node.EventType.MOUSE_DOWN, function () {
-        //     self.
-        // });
+
+        //暂时无法更换人物
+        // this.changeModel("Hiyori");
+        // this.changeModel("Natori");
     },
 
     _getMotionMode(m) {
@@ -50,16 +42,9 @@ cc.Class({
             return;
         }
 
-        var ran = Math.round(Math.random() * 2);
-        console.log(this.SPEAKMode[ran]);
+        var ran = Math.round(Math.random() * (this.motionMode[this.modelName][m].length - 1));
 
-        if (m == "SPEAK") {
-            return this.SPEAKMode[ran];
-        }
-        else if (m == "IDLE") {
-            return this.IDLEMode[ran];
-        }
-
+        return this.motionMode[this.modelName][m][ran];
     },
 
     /**
@@ -84,7 +69,7 @@ cc.Class({
             return;
         }
 
-        if (this.cnt == 0) {
+        if (this.cnt == 0) {//用于弥补首次切换动作不生效问题，原因不明
             this.getComponent(Live2dComponent).live2d.getModel(0).startMotion(Live2dDefine.MotionGroupIdle,
                 this._getMotionMode(m), this.cnt++);
         }
@@ -94,15 +79,15 @@ cc.Class({
 
     },
 
+    changeModel(m) {
+        if (!m) {
+            console.error("changeModel param m is null");
+            return;
+        }
 
+        this.modelName = m;
+        this.getComponent(Live2dComponent).live2d.loadModel(m);
+        this.getComponent(Live2dComponent).loopIdelMotion = false;
 
-    // button() {
-    //     // this.getComponent(Live2dComponent).live2d.getModel(0).startRandomMotion(Live2dDefine.MotionGroupIdle, Live2dDefine.PriorityIdle);
-    //     // this.getComponent(Live2dComponent).live2d.getModel(0).startMotion(Live2dDefine.MotionGroupIdle, this.cnt++, this.cnt);
-    //     // console.log(this.cnt - 1);
-
-    //     this.changeMotion("SPEAK");
-    // }
-
-    // update (dt) {},
+    },
 });

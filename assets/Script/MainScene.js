@@ -1,3 +1,5 @@
+var net = require("NetModel.js");
+
 cc.Class({
     extends: cc.Component,
 
@@ -24,7 +26,7 @@ cc.Class({
     // onLoad () {},
 
     start() {
-
+        // net.Get("");
     },
 
     button() {
