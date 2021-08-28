@@ -25,6 +25,16 @@ cc.Class({
 
     // onLoad () {},
 
+    ctor() {
+
+        this.history = [
+            { "input": "", "output": "" },
+        ]; //对话历史
+        this.input = ""; //当前输入
+        this.output = ""; //当前输出
+
+    },
+
     start() {
         // net.Get("");
     },
@@ -32,7 +42,12 @@ cc.Class({
     button() {
         var kanban = cc.find("Canvas/Kanban");
         kanban.getComponent("Kanban").changeMotion("SPEAK");
-    }
+    },
+
+    //录音，需要跨平台
+    recordAudio() {
+
+    },
 
     // update (dt) {},
 });

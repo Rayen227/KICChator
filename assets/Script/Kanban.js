@@ -34,6 +34,8 @@ cc.Class({
         //暂时无法更换人物
         // this.changeModel("Hiyori");
         // this.changeModel("Natori");
+
+        this.getComponent(Live2dComponent).loopIdelMotion = false;
     },
 
     _getMotionMode(m) {
