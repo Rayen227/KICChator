@@ -10,18 +10,20 @@ cc.Class({
 
     ctor() {
 
-        this.modelName = "Hiyori";
+        this.modelName = "Natori";
 
         this.motionMode = {
             "Hiyori": {
+                "m": "Idle",
                 "SPEAK": [3, 4, 6],
                 "IDLE": [0, 1, 2],
                 "ERROR": [5, 7]
             },
-            "Natori": {//待修改
-                "SPEAK": [3, 4, 6],
-                "IDLE": [0, 1, 2],
-                "ERROR": [5, 7]
+            "Natori": {
+                "m": "Tap",
+                "SPEAK": [1, 2, 3, 4, 5, 6],
+                "IDLE": [0],
+                "ERROR": [7]
             }
         }
 
@@ -29,13 +31,11 @@ cc.Class({
         this.cnt = 0; //动作切换次数，保证新动作优先级高于原动作
     },
     start() {
-        var self = this;
 
-        //暂时无法更换人物
-        // this.changeModel("Hiyori");
-        // this.changeModel("Natori");
-
+        //暂时仅能使用人物Hiyori,Natori
+        this.changeModel(this.modelName);
         this.getComponent(Live2dComponent).loopIdelMotion = false;
+
     },
 
     _getMotionMode(m) {
@@ -44,21 +44,15 @@ cc.Class({
             return;
         }
 
-        var ran = Math.round(Math.random() * (this.motionMode[this.modelName][m].length - 1));
+        if (!this.motionMode[this.modelName]) {
+            console.error("请配置模型动作");
+        }
+        var ran = parseInt(Math.random() * this.motionMode[this.modelName][m].length, 10);
+        // var ran = Math.round(Math.random() * this.motionMode[this.modelName][m].length);
 
         return this.motionMode[this.modelName][m][ran];
     },
 
-    /**
-     * @description 未知错误的弥补手段
-     * @param {number} m 错误编号 1:live2d首次切换Motion不生效, 
-     * 
-     */
-    _unkownErrorFixer(m) {
-        if (m == 1) {
-
-        }
-    },
 
     /**
      * @description 切换人物动作
@@ -71,14 +65,32 @@ cc.Class({
             return;
         }
 
+        var group = null;
+        if (this.motionMode[this.modelName].m == "Idle") {
+            group = Live2dDefine.MotionGroupIdle;
+        }
+        else if (this.motionMode[this.modelName].m == "Tap") {
+            group = Live2dDefine.MotionGroupTapBody;
+        }
+        else {
+            console.error("MotionGroup 错误");
+            return;
+        }
+
+
         if (this.cnt == 0) {//用于弥补首次切换动作不生效问题，原因不明
-            this.getComponent(Live2dComponent).live2d.getModel(0).startMotion(Live2dDefine.MotionGroupIdle,
+            this.getComponent(Live2dComponent).live2d.getModel(0).startMotion(group,
                 this._getMotionMode(m), this.cnt++);
         }
 
-        this.getComponent(Live2dComponent).live2d.getModel(0).startMotion(Live2dDefine.MotionGroupIdle,
+        this.getComponent(Live2dComponent).live2d.getModel(0).startMotion(group,
             this._getMotionMode(m), this.cnt++);
 
+
+        // this.getComponent(Live2dComponent).live2d.getModel(0).startMotion(Live2dDefine.MotionGroupTapBody,
+        //     this.cnt, this.cnt);
+        // console.log(this.cnt++);
+        // this.getComponent(Live2dComponent).live2d.getModel(0).startRandomMotion(Live2dDefine.MotionGroupTapBody, Live2dDefine.PriorityForce);
     },
 
     changeModel(m) {
@@ -89,7 +101,6 @@ cc.Class({
 
         this.modelName = m;
         this.getComponent(Live2dComponent).live2d.loadModel(m);
-        this.getComponent(Live2dComponent).loopIdelMotion = false;
 
     },
 });

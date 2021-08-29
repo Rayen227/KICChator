@@ -1,4 +1,9 @@
-var net = require("NetModel.js");
+// Learn cc.Class:
+//  - https://docs.cocos.com/creator/manual/en/scripting/class.html
+// Learn Attribute:
+//  - https://docs.cocos.com/creator/manual/en/scripting/reference/attributes.html
+// Learn life-cycle callbacks:
+//  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
     extends: cc.Component,
@@ -24,32 +29,16 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {},
-
     ctor() {
 
-        this.history = [
-            { "input": "", "output": "" },
-        ]; //对话历史
-        this.input = ""; //当前输入
-        this.output = ""; //当前输出
 
     },
-
     start() {
-        this.kanban = cc.find("Canvas/Kanban").getComponent("Kanban");
-        this.text = cc.find("Canvas/Buble").getComponent("Buble");
+        this.text = this.getComponentInChildren(cc.RichText);
+        console.log("!!!!!", this.text.string);
     },
-
-    button() {
-
-        this.kanban.changeMotion("SPEAK");
-        this.text.setText("<color=fff><b>Speaking</b></color>");
-
-    },
-
-    //录音，需要跨平台
-    recordAudio() {
-
+    setText(t) {
+        this.text.string = t;
     },
 
     // update (dt) {},
