@@ -45,7 +45,7 @@ cc.Class({
         // this.text = cc.find("Canvas/Buble").getComponent("Buble");
         // this.ebox = cc.find("Canvas/Down").getComponentInChildren(cc.EditBox);//
         // this.sendButton = cc.find("Canvas/Down/Send");
-        this.historyLabel = cc.find("Canvas/History/view/content/item").getComponent(cc.Label);
+        this.historyLabel = cc.find("Canvas/History/view/content/item").getComponent(cc.RichText);
     },
 
     button() {
@@ -83,7 +83,7 @@ cc.Class({
 
         //     this.history.string = 
         // }
-        this.historyLabel.string += this.input + "\n\t" + this.output + "\n\n";
+        this.historyLabel.string += "<size=24px>" + "<color=gray>" + this.input + "</color>" + "\n\t" + this.output + "\n" + "</size>";
         // this.historyLabel.string = "???"
     },
 });
