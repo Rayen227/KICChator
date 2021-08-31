@@ -8,46 +8,30 @@ cc.Class({
             default: [],
             type: cc.EditBox
         },
-
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
     },
-
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
 
     ctor() {
 
+        this.netStatus = true;
         this.history = [
             // { "input": "", "output": "" },
         ]; //对话历史
         this.input = ""; //当前输入
         this.output = ""; //当前输出
+        this.t = 0;
+        this.actionQueue = [];
 
     },
 
     start() {
         this.kanban = cc.find("Canvas/Kanban").getComponent("Kanban");
-        // this.text = cc.find("Canvas/Buble").getComponent("Buble");
-        // this.ebox = cc.find("Canvas/Down").getComponentInChildren(cc.EditBox);//
-        // this.sendButton = cc.find("Canvas/Down/Send");
         this.historyLabel = cc.find("Canvas/History/view/content/item").getComponent(cc.RichText);
 
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this._onKeyDown, this);
+
+        this.setTimer();
+
+
     },
 
     button() {
@@ -55,6 +39,24 @@ cc.Class({
         this.kanban.changeMotion("SPEAK");
         // this.text.setText("<color=fff><b>Speaking</b></color>");
 
+    },
+
+    setTimer() {
+        var self = this;
+        setInterval(function () {
+            self.t++;
+            for (var i = 0; i < self.actionQueue.length; i++) {
+                var a = self.actionQueue[i];
+                a.d--;
+                if (a.d <= 0) {
+                    a.f(a.p);
+                    self.actionQueue.splice(i, 1);
+                    i--;
+                } else {
+                    return;
+                }
+            }
+        }, 1000);
     },
 
     send() {
@@ -70,12 +72,19 @@ cc.Class({
 
         //网络模块
         this.output = this.input + "的回答";
+        this.netStatus = true;
 
         this.kanban.changeMotion("SPEAK");
+        var self = this;
+        this._addAction(function () {
+            self.kanban.changeMotion("IDLE");
+        }, 5, {});
 
         this._addHistory(this.input, this.output);
 
         this.Ebox[0].string = "";
+
+
     },
 
 
@@ -88,6 +97,7 @@ cc.Class({
 
     // },
 
+
     _onKeyDown: function (e) {
         if (e.keyCode == 13) {
             this.send();
@@ -96,14 +106,8 @@ cc.Class({
 
     _addHistory(i, o) {
         this.history.unshift({ "input": i, "output": o });
-
-        // for (var i = 0; i < this.history.length; i++) {
-        //     var item = this.history[i];
-
-        //     this.history.string = 
-        // }
         this.historyLabel.string = "<size=24px>" + "<color=gray>" + this.input + "</color>" + "\n\t" + this.output + "\n" + "</size>" + this.historyLabel.string;
-        // this.historyLabel.string = "???"
+
     },
 
     //验证输入非空、安全
@@ -120,5 +124,33 @@ cc.Class({
         return true;
 
     },
+
+    _addAction(f, d, p) {
+        this.actionQueue.push({ "f": f, "d": d, "p": p });
+        this.actionQueue.sort(this._comp('d', true));
+
+    },
+
+    _comp: function (attr, rev) {
+        if (rev == undefined) {
+            rev = 1;
+        } else {
+            rev = (rev) ? 1 : -1;
+        }
+
+        return function (a, b) {
+            a = a[attr];
+            b = b[attr];
+            if (a < b) {
+                return rev * -1;
+            }
+            if (a > b) {
+                return rev * 1;
+            }
+            return 0;
+        }
+    },
+
+
 
 });
