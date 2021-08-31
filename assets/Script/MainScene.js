@@ -46,6 +46,8 @@ cc.Class({
         // this.ebox = cc.find("Canvas/Down").getComponentInChildren(cc.EditBox);//
         // this.sendButton = cc.find("Canvas/Down/Send");
         this.historyLabel = cc.find("Canvas/History/view/content/item").getComponent(cc.RichText);
+
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this._onKeyDown, this);
     },
 
     button() {
@@ -59,12 +61,21 @@ cc.Class({
         // console.log("Send");
         // console.log(this.Ebox[0].string);
         this.input = this.Ebox[0].string;
+
+        if (!this._isValidInput(this.input)) {
+            this.kanban.changeMotion("ERROR");
+            console.log("输入不合法");
+            return;
+        }
+
         //网络模块
         this.output = this.input + "的回答";
 
         this.kanban.changeMotion("SPEAK");
 
         this._addHistory(this.input, this.output);
+
+        this.Ebox[0].string = "";
     },
 
 
@@ -73,17 +84,41 @@ cc.Class({
 
     },
 
-    // update (dt) {},
+    // update(dt) {
+
+    // },
+
+    _onKeyDown: function (e) {
+        if (e.keyCode == 13) {
+            this.send();
+        }
+    },
 
     _addHistory(i, o) {
-        this.history.push({ "input": i, "output": o });
+        this.history.unshift({ "input": i, "output": o });
 
         // for (var i = 0; i < this.history.length; i++) {
         //     var item = this.history[i];
 
         //     this.history.string = 
         // }
-        this.historyLabel.string += "<size=24px>" + "<color=gray>" + this.input + "</color>" + "\n\t" + this.output + "\n" + "</size>";
+        this.historyLabel.string = "<size=24px>" + "<color=gray>" + this.input + "</color>" + "\n\t" + this.output + "\n" + "</size>" + this.historyLabel.string;
         // this.historyLabel.string = "???"
     },
+
+    //验证输入非空、安全
+    _isValidInput(s) {
+
+        if (s == "") {
+            return false;
+        }
+        for (i = 0; i < s.length; i++) {
+            if (s.charAt(i) == "<" || s.charAt(i) == ">" || s.charAt(i) == "'") {
+                return false;
+            }
+        }
+        return true;
+
+    },
+
 });

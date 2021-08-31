@@ -189,7 +189,7 @@
       "array": [
         0,
         0,
-        432.14667648843493,
+        423.6758655076684,
         0,
         0,
         0,
@@ -926,7 +926,9 @@
       "__id__": 13
     },
     "_enabled": true,
-    "_normalMaterial": null,
+    "_normalMaterial": {
+      "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
+    },
     "_grayMaterial": null,
     "duration": 0.1,
     "zoomScale": 1.2,
