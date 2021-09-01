@@ -34,13 +34,6 @@ cc.Class({
 
     },
 
-    button() {
-
-        this.kanban.changeMotion("SPEAK");
-        // this.text.setText("<color=fff><b>Speaking</b></color>");
-
-    },
-
     setTimer() {
         var self = this;
         setInterval(function () {
@@ -60,6 +53,9 @@ cc.Class({
     },
 
     send() {
+
+        var backT = 7;//说话7s后回到正常状态
+
         // console.log("Send");
         // console.log(this.Ebox[0].string);
         this.input = this.Ebox[0].string;
@@ -78,7 +74,7 @@ cc.Class({
         var self = this;
         this._addAction(function () {
             self.kanban.changeMotion("IDLE");
-        }, 5, {});
+        }, backT, {});
 
         this._addHistory(this.input, this.output);
 

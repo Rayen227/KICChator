@@ -21,9 +21,9 @@ cc.Class({
             },
             "Natori": {
                 "m": "Tap",
-                "SPEAK": [1, 2, 3, 4, 5, 6],
-                "IDLE": [0],
-                "ERROR": [7]
+                "SPEAK": [1, 2, 5],
+                "IDLE": [0, 4, 6],
+                "ERROR": [3, 7]
             }
         }
 
@@ -38,25 +38,12 @@ cc.Class({
 
     },
 
-    _getMotionMode(m) {
-        if (!m) {
-            console.error("_getMotionMode param m is null");
-            return;
-        }
 
-        if (!this.motionMode[this.modelName]) {
-            console.error("请配置模型动作");
-        }
-        var ran = parseInt(Math.random() * this.motionMode[this.modelName][m].length, 10);
-        // var ran = Math.round(Math.random() * this.motionMode[this.modelName][m].length);
-
-        return this.motionMode[this.modelName][m][ran];
-    },
 
 
     /**
      * @description 切换人物动作
-     * @param m String,"SPEAK", "IDLE"
+     * @param m String,"SPEAK", "IDLE", "ERROR"
      */
     changeMotion(m) {
 
@@ -87,10 +74,10 @@ cc.Class({
             this._getMotionMode(m), this.cnt++);
 
 
-        // this.getComponent(Live2dComponent).live2d.getModel(0).startMotion(Live2dDefine.MotionGroupTapBody,
+        // this.getComponent(Live2dComponent).live2d.getModel(0).startMotion(group,
         //     this.cnt, this.cnt);
         // console.log(this.cnt++);
-        // this.getComponent(Live2dComponent).live2d.getModel(0).startRandomMotion(Live2dDefine.MotionGroupTapBody, Live2dDefine.PriorityForce);
+
     },
 
     changeModel(m) {
@@ -102,5 +89,20 @@ cc.Class({
         this.modelName = m;
         this.getComponent(Live2dComponent).live2d.loadModel(m);
 
+    },
+
+    _getMotionMode(m) {
+        if (!m) {
+            console.error("_getMotionMode param m is null");
+            return;
+        }
+
+        if (!this.motionMode[this.modelName]) {
+            console.error("请配置模型动作");
+        }
+        // var ran = parseInt(Math.random() * this.motionMode[this.modelName][m].length, 10);
+        // this.motionMode[this.modelName][m].push(this.motionMode[this.modelName][m].shift());
+
+        return this.motionMode[this.modelName][m][this.cnt % this.motionMode[this.modelName][m].length];
     },
 });
