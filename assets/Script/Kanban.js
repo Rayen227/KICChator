@@ -17,13 +17,19 @@ cc.Class({
                 "m": "Idle",
                 "SPEAK": [3, 4, 6],
                 "IDLE": [0, 1, 2],
-                "ERROR": [5, 7]
+                "ERROR": [5, 7],
+
+                //待修改
+                "WELCOME": [2],
+                "STOP": [0],
             },
             "Natori": {
                 "m": "Tap",
                 "SPEAK": [1, 2, 5],
-                "IDLE": [0, 4, 6],
-                "ERROR": [3, 7]
+                "IDLE": [4, 0, 6],
+                "ERROR": [3, 7],
+                "WELCOME": [2],
+                "STOP": [0],
             }
         }
 
@@ -43,7 +49,7 @@ cc.Class({
 
     /**
      * @description 切换人物动作
-     * @param m String,"SPEAK", "IDLE", "ERROR"
+     * @param m String,"SPEAK", "IDLE", "ERROR", "WELCOME", "STOP"
      */
     changeMotion(m) {
 

@@ -16,6 +16,7 @@ cc.Class({
         this.history = [
             // { "input": "", "output": "" },
         ]; //对话历史
+        this.historyOff = true;
         this.input = ""; //当前输入
         this.output = ""; //当前输出
         this.t = 0;
@@ -26,38 +27,56 @@ cc.Class({
     start() {
         this.kanban = cc.find("Canvas/Kanban").getComponent("Kanban");
         this.historyLabel = cc.find("Canvas/History/view/content/item").getComponent(cc.RichText);
-
+        this.historyPannel = cc.find("Canvas/History");
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this._onKeyDown, this);
 
-        this.setTimer();
+        this._setTimer();
+
+        this.welcome();
+
+    },
+
+    welcome() {
+        var self = this;
+        this._addAction(function () {
+            cc.find("Canvas/Kanban").runAction(cc.spawn(
+                cc.fadeTo(0.5, 255),
+                cc.scaleTo(0.5, 1, 1),
+            ));
+            self.kanban.changeMotion("WELCOME");
+        }, 2, {});
+        this._addAction(function () {
+            self.kanban.changeMotion("STOP");
+        }, 7, {});
 
 
     },
 
-    setTimer() {
-        var self = this;
-        setInterval(function () {
-            self.t++;
-            for (var i = 0; i < self.actionQueue.length; i++) {
-                var a = self.actionQueue[i];
-                a.d--;
-                if (a.d <= 0) {
-                    a.f(a.p);
-                    self.actionQueue.splice(i, 1);
-                    i--;
-                } else {
-                    return;
-                }
-            }
-        }, 1000);
+    //切换历史记录面板的显示状态
+    showHistory() {
+        var s = 0.3;
+
+        if (this.historyOff) {
+            this.historyOff = false;
+            this.historyPannel.runAction(cc.spawn(
+                cc.moveTo(s, cc.v2(0, 547)),
+                cc.fadeTo(s, 255),
+            ));
+        }
+        else {
+            this.historyOff = true;
+            this.historyPannel.runAction(cc.spawn(
+                cc.moveTo(s, cc.v2(0, 667)),
+                cc.fadeTo(s, 0),
+            ));
+        }
+
     },
 
     send() {
 
         var backT = 7;//说话7s后回到正常状态
 
-        // console.log("Send");
-        // console.log(this.Ebox[0].string);
         this.input = this.Ebox[0].string;
 
         if (!this._isValidInput(this.input)) {
@@ -147,6 +166,21 @@ cc.Class({
         }
     },
 
-
+    //时间控制器，伪多线程；每1s刷新一次；
+    _setTimer() {
+        var self = this;
+        setInterval(function () {
+            self.t++;
+            for (var i = 0; i < self.actionQueue.length; i++) {
+                var a = self.actionQueue[i];
+                a.d--;
+                if (a.d <= 0) {
+                    a.f(a.p);
+                    self.actionQueue.splice(i, 1);
+                    i--;
+                }
+            }
+        }, 1000);
+    },
 
 });
