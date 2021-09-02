@@ -39,8 +39,12 @@ cc.Class({
     start() {
 
         //暂时仅能使用人物Hiyori,Natori
-        this.changeModel(this.modelName);
+        this.setModel(this.modelName);
         this.getComponent(Live2dComponent).loopIdelMotion = false;
+
+        // this.getComponent(Live2dComponent).node.on(Live2dComponent.EvtMotionFinish, () => {
+        //     console.log("!!!!!!!!!!!!fish");
+        // })
 
     },
 
@@ -51,10 +55,10 @@ cc.Class({
      * @description 切换人物动作
      * @param m String,"SPEAK", "IDLE", "ERROR", "WELCOME", "STOP"
      */
-    changeMotion(m) {
+    setMotion(m) {
 
         if (!m) {
-            console.error("changeMotion param m is null");
+            console.error("setMotion param m is null");
             return;
         }
 
@@ -85,10 +89,13 @@ cc.Class({
         // console.log(this.cnt++);
 
     },
-
-    changeModel(m) {
+    setExpression(m) {
+        this.getComponent(Live2dComponent).live2d.getModel(0).setExpression("Cry");
+        console.log("!!!!!setExp")
+    },
+    setModel(m) {
         if (!m) {
-            console.error("changeModel param m is null");
+            console.error("setModel param m is null");
             return;
         }
 

@@ -19,8 +19,10 @@ cc.Class({
         this.historyOff = true;
         this.input = ""; //当前输入
         this.output = ""; //当前输出
-        this.t = 0;
+
         this.actionQueue = [];
+        this.t = 0;
+        this.resetTime = 5; //动作到下一个停止动作的最短间隔,秒
 
     },
 
@@ -43,10 +45,12 @@ cc.Class({
                 cc.fadeTo(0.5, 255),
                 cc.scaleTo(0.5, 1, 1),
             ));
-            self.kanban.changeMotion("WELCOME");
+            self.kanban.setMotion("WELCOME");
+            self._resetCount();
         }, 2, {});
         this._addAction(function () {
-            self.kanban.changeMotion("STOP");
+            self.kanban.setMotion("STOP");
+            self._resetCount();
         }, 7, {});
 
 
@@ -71,6 +75,9 @@ cc.Class({
             ));
         }
 
+
+        this.kanban.setExpression();
+
     },
 
     send() {
@@ -80,7 +87,8 @@ cc.Class({
         this.input = this.Ebox[0].string;
 
         if (!this._isValidInput(this.input)) {
-            this.kanban.changeMotion("ERROR");
+            this.kanban.setMotion("ERROR");
+            this._resetCount();
             console.log("输入不合法");
             return;
         }
@@ -89,10 +97,14 @@ cc.Class({
         this.output = this.input + "的回答";
         this.netStatus = true;
 
-        this.kanban.changeMotion("SPEAK");
+        this.kanban.setMotion("SPEAK");
+        this._resetCount();
         var self = this;
         this._addAction(function () {
-            self.kanban.changeMotion("IDLE");
+            if (self.t <= 0) {
+                self.kanban.setMotion("IDLE");
+                self._resetCount();
+            }
         }, backT, {});
 
         this._addHistory(this.input, this.output);
@@ -101,16 +113,6 @@ cc.Class({
 
 
     },
-
-
-    //录音，需要跨平台
-    recordAudio() {
-
-    },
-
-    // update(dt) {
-
-    // },
 
 
     _onKeyDown: function (e) {
@@ -170,7 +172,7 @@ cc.Class({
     _setTimer() {
         var self = this;
         setInterval(function () {
-            self.t++;
+            self.t--;
             for (var i = 0; i < self.actionQueue.length; i++) {
                 var a = self.actionQueue[i];
                 a.d--;
@@ -181,6 +183,10 @@ cc.Class({
                 }
             }
         }, 1000);
+    },
+
+    _resetCount() {
+        this.t = this.resetTime;
     },
 
 });
