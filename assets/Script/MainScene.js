@@ -36,6 +36,7 @@ cc.Class({
 
         this.welcome();
 
+
     },
 
     welcome() {
@@ -94,22 +95,27 @@ cc.Class({
         }
 
         //网络模块
-        this.output = this.input + "的回答";
-        this.netStatus = true;
 
-        this.kanban.setMotion("SPEAK");
-        this._resetCount();
-        var self = this;
-        this._addAction(function () {
-            if (self.t <= 0) {
-                self.kanban.setMotion("IDLE");
-                self._resetCount();
-            }
-        }, backT, {});
+        this.output = net.post("/text", { "sentence": this.input }, function (res) {
+            console.log(res);
 
-        this._addHistory(this.input, this.output);
+            // this.netStatus = true;
 
-        this.Ebox[0].string = "";
+            // this.kanban.setMotion("SPEAK");
+            // this._resetCount();
+            // var self = this;
+            // this._addAction(function () {
+            //     if (self.t <= 0) {
+            //         self.kanban.setMotion("IDLE");
+            //         self._resetCount();
+            //     }
+            // }, backT, {});
+
+            // this._addHistory(this.input, this.output);
+
+            // this.Ebox[0].string = "";
+        });
+
 
 
     },
