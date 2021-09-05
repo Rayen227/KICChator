@@ -91,7 +91,7 @@ cc.Class({
     },
     setExpression(m) {
         this.getComponent(Live2dComponent).live2d.getModel(0).setExpression("Cry");
-        console.log("!!!!!setExp")
+        // console.log("!!!!!setExp")
     },
     setModel(m) {
         if (!m) {

@@ -30,12 +30,13 @@ cc.Class({
         this.kanban = cc.find("Canvas/Kanban").getComponent("Kanban");
         this.historyLabel = cc.find("Canvas/History/view/content/item").getComponent(cc.RichText);
         this.historyPannel = cc.find("Canvas/History");
+        this.BubbleLabel = cc.find("Canvas/Bubble/item").getComponent(cc.RichText);
+        this.BubblePannel = cc.find("Canvas/Bubble")
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this._onKeyDown, this);
 
         this._setTimer();
 
         this.welcome();
-
 
     },
 
@@ -77,7 +78,7 @@ cc.Class({
         }
 
 
-        this.kanban.setExpression();
+        // this.kanban.setExpression();
 
     },
 
@@ -96,28 +97,54 @@ cc.Class({
 
         //网络模块
 
-        this.output = net.post("/text", { "sentence": this.input }, function (res) {
-            console.log(res);
+        this.output = net.post("/text", { "sentence": this.input, "test": "abc" }, res => {
 
-            // this.netStatus = true;
+            this.kanban.setMotion("SPEAK");
+            var self = this;
+            this._addAction(function () {
+                if (self.t <= 0) {
+                    self.kanban.setMotion("IDLE");
+                    self._resetCount();
+                }
+            }, backT, {});
 
-            // this.kanban.setMotion("SPEAK");
-            // this._resetCount();
-            // var self = this;
-            // this._addAction(function () {
-            //     if (self.t <= 0) {
-            //         self.kanban.setMotion("IDLE");
-            //         self._resetCount();
-            //     }
-            // }, backT, {});
 
-            // this._addHistory(this.input, this.output);
+            this.showBubble();
+            this._resetCount();
 
-            // this.Ebox[0].string = "";
+            this.netStatus = true;
+            this.output = res.responseText;
+            this.setBubbleText(this.output);
+            this._addHistory(this.input, this.output);
+            this.Ebox[0].string = "";
+
+
+        }, err => {
+            this.netStatus = false;
+            this.kanban.setMotion("ERROR");
         });
 
 
 
+    },
+
+    setBubbleText(s) {
+
+        // console.log(s);
+
+        // this.BubbleLabel.string = s;
+        this.BubbleLabel.string = "<size=32px><color=black>" + s + "</color></size>";
+    },
+
+    showBubble() {
+        this.BubblePannel.runAction(
+            cc.fadeTo(0.5, 255),
+        );
+    },
+    hideBubble() {
+        this.BubblePannel.runAction(
+            cc.fadeTo(0.5, 0),
+        );
     },
 
 
