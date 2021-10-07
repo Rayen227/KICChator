@@ -133,7 +133,7 @@ cc.Class({
         // console.log(s);
 
         // this.BubbleLabel.string = s;
-        this.BubbleLabel.string = "<size=32px><color=black>" + s + "</color></size>";
+        this.BubbleLabel.string = "<size=24px><color=black>" + s + "</color></size>";
     },
 
     showBubble() {

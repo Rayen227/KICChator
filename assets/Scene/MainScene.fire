@@ -192,7 +192,7 @@
       "array": [
         0,
         0,
-        423.6758655076684,
+        423.7164447686945,
         0,
         0,
         0,
@@ -2806,7 +2806,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 200,
+      "width": 300,
       "height": 63
     },
     "_anchorPoint": {
@@ -2818,8 +2818,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -45.391,
-        40.25,
+        -10.971,
+        31.027,
         0,
         0,
         0,
@@ -2904,7 +2904,7 @@
     "_groupIndex": 0,
     "groupIndex": 0,
     "showInEditor": false,
-    "_id": "6fO9bwqh1GPbpntivsbDKY"
+    "_id": "5dDLYnl1dPNpHPkyJ5lOf/"
   },
   {
     "__type__": "cc.Label",
@@ -2936,7 +2936,7 @@
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
     "_N$cacheMode": 0,
-    "_id": "ecQ/3PaElC66PQwG/9/4mB"
+    "_id": "6emWesEN9Ml78JqEs3W09t"
   },
   {
     "__type__": "cc.RichText",
@@ -2950,7 +2950,7 @@
     "_isSystemFontUsed": true,
     "_N$string": "<size=28px><color=black> 气泡</color></size>",
     "_N$horizontalAlign": 0,
-    "_N$fontSize": 40,
+    "_N$fontSize": 28,
     "_N$font": null,
     "_N$cacheMode": 0,
     "_N$maxWidth": 200,
@@ -2974,9 +2974,7 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_spriteFrame": {
-      "__uuid__": "e800d155-dfc3-4d7f-8514-4b1ec8d79dae"
-    },
+    "_spriteFrame": null,
     "_type": 0,
     "_sizeMode": 0,
     "_fillType": 0,
